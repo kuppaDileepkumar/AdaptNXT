@@ -53,7 +53,7 @@
     let cart = [];
 
     function fetchProducts() {
-      fetch('http://localhost:5000/api/products', {
+      fetch('https://adaptnxt-awph.onrender.com/api/products', {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(res => res.json())
@@ -97,7 +97,7 @@
 
       const productIds = cart.map(p => p._id);
 
-      fetch('http://localhost:5000/api/orders', {
+      fetch('https://adaptnxt-awph.onrender.com/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
