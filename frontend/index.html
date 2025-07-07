@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple E-commerce - Login/Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    h1, h2 {
+      color: #222;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 5px;
+    }
+
+    input, select, button {
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 14px;
+      width: 100%;
+      max-width: 300px;
+      display: block;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .section {
+      margin-bottom: 30px;
+      max-width: 400px;
+    }
+
+    @media (min-width: 600px) {
+      .section {
+        max-width: 600px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simple E-commerce</h1>
+
+  <div class="section">
+    <h2>Register</h2>
+    <input type="text" id="regUsername" placeholder="Username" />
+    <input type="email" id="regEmail" placeholder="Email" />
+    <input type="password" id="regPassword" placeholder="Password" />
+    <select id="regRole">
+      <option value="customer">Customer</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button onclick="register()">Register</button>
+  </div>
+
+  <div class="section">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" />
+    <input type="password" id="loginPassword" placeholder="Password" />
+    <select id="loginRole">
+        <option value="customer">Customer</option>
+        <option value="admin">Admin</option>
+  </select>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <script>
+    function register() {
+      fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('regUsername').value,
+          email: document.getElementById('regEmail').value,
+          password: document.getElementById('regPassword').value,
+          role: document.getElementById('regRole').value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert('Registered successfully!');
+      })
+      .catch(() => alert('Registration failed.'));
+    }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    const role = document.getElementById('loginRole').value;
+
+    fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+      .then(res => res.json())
+      .then(data => {
+        const token = data.token;
+        if (!token) {
+          alert('Login failed. Please check credentials.');
+          return;
+        }
+
+         // Verify role match
+      if (data.user.role !== role) {
+        alert(`Access denied: You are not logged in as a ${role}.`);
+        return;
+      }
+
+        alert('Logged in!');
+        localStorage.setItem('token', token);
+
+        // Redirect based on role
+        if (data.user.role === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'customer.html';
+        }
+      })
+      .catch(() => alert('Login request failed.'));
+
+    }
+  </script>
+
+</body>
+</html>

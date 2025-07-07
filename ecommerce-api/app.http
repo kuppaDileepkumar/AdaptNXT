@@ -1,0 +1,88 @@
+### Register (customer)
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "john",
+  "email": "john@example.com",
+  "password": "password123",
+  "role": "customer"
+}
+
+### Register (admin)
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "admin1",
+  "email": "admin@example.com",
+  "password": "adminpass",
+  "role": "admin"
+}
+
+### Login (customer)
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Login (admin)
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "adminpass"
+}
+
+### Get All Products
+GET http://localhost:5000/api/products
+
+### Add Product (admin only)
+POST http://localhost:5000/api/products
+Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA"
+Content-Type: application/json
+
+{
+  "name": "iPhone 15",
+  "price": 999,
+  "category": "Mobile"
+}
+
+### Update Product (admin only)
+PUT http://localhost:5000/api/products/{{product_id}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA
+Content-Type: application/json
+
+{
+  "name": "iPhone 15 Pro",
+  "price": 1099
+}
+
+### Delete Product (admin only)
+DELETE http://localhost:5000/api/products/{{product_id}}
+Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA"
+
+### Add to Cart (customer)
+PUT http://localhost:5000/api/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA",
+      "quantity": 2
+    }
+  ]
+}
+
+### View Cart (customer)
+GET http://localhost:5000/api/cart
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA
+### Place Order
+POST http://localhost:5000/api/orders
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmI0NzE3ZDg5OGVhNWM5NmFiMTI0ZiIsImlhdCI6MTc1MTg2MTA5MH0.y8_odPHSZDQjlmZwY-4-iISVJQo6hWo0KYpSc9Yg3qA

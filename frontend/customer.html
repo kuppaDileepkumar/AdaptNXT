@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .product {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin: 10px 0;
+      background: #fff;
+    }
+
+    button {
+      padding: 8px 12px;
+      margin-top: 10px;
+      background: green;
+      color: white;
+      border: none;
+    }
+
+    #cart {
+      margin-top: 30px;
+      background-color: #e8e8e8;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Customer Dashboard</h1>
+
+  <div id="productList"></div>
+
+  <div id="cart">
+    <h2>Cart</h2>
+    <ul id="cartItems"></ul>
+    <button onclick="placeOrder()">Place Order</button>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    let cart = [];
+
+    function fetchProducts() {
+      fetch('http://localhost:5000/api/products', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(products => {
+        const list = document.getElementById('productList');
+        list.innerHTML = '';
+        products.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'product';
+          div.innerHTML = `
+            <h3>${p.name}</h3>
+            <p>${p.description}</p>
+            <p><strong>$${p.price}</strong></p>
+            <button onclick='addToCart(${JSON.stringify(p)})'>Add to Cart</button>
+          `;
+          list.appendChild(div);
+        });
+      });
+    }
+
+    function addToCart(product) {
+      cart.push(product);
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartList = document.getElementById('cartItems');
+      cartList.innerHTML = '';
+      cart.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - $${item.price}`;
+        cartList.appendChild(li);
+      });
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) {
+        alert('Cart is empty');
+        return;
+      }
+
+      const productIds = cart.map(p => p._id);
+
+      fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ products: productIds })
+      })
+      .then(() => {
+        alert('Order placed successfully!');
+        cart = [];
+        updateCart();
+      });
+    }
+
+    fetchProducts();
+  </script>
+</body>
+</html>
